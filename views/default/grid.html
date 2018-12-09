@@ -1,0 +1,140 @@
+{{extend 'layout.html'}}
+<div id="app">
+    {{=grid}}
+</div>
+
+{{ if configuration.get('app.production'):}}
+<script src="{{=URL('static','/js/vue.min.js')}}"></script>
+{{else:}}
+<script src="{{=URL('static','/js/vue.js')}}"></script>
+{{ pass }}
+<!-- Include after Vue -->
+<script src="{{=URL('static','/js/axios.min.js')}}"></script>
+<script src="{{=URL('static','/js/lodash.min.js')}}"></script>
+
+<script src="{{=URL('static','/js/w-autocomplete.min.js')}}"></script>
+<script src="{{=URL('static','/js/w-chip-list.min.js')}}"></script>
+
+<script>
+  var vm = new Vue({
+    delimiters: ["{[", "]}"],
+    data: {
+      items: [],
+      selectElement: null
+    },
+    methods: {
+      itemSelected(item) {
+        index = this.items.findIndex(x => x.id == item.id);
+        if (index < 0) {
+          this.items.push(item);
+        }
+      },
+      itemDeleted(id) {
+        index = this.items.findIndex(x => x.id == id);
+        if (index > -1) {
+          this.items.splice(index, 1);
+        }
+      }
+    },
+    watch: {
+      items() {
+        if (this.selectElement) {
+          this.selectElement.empty();
+          this.items.forEach(item => {
+              console.log(item.id,item.tag)
+            var o = new Option( item.tag,item.id);
+            o.setAttribute('selected','selected')
+            /// jquerify the DOM object 'o' so we can use the html method
+            //$(o).html(item.tag);
+            //$("#selectList").append(o);
+            this.selectElement.append(o);
+          });
+        }
+      }
+    },
+    mounted() {
+      this.selectElement = jQuery("#tenant_attachment_lista");
+      var options = jQuery("#tenant_attachment_lista > option");
+      var vmInstance = this;
+      options.each(function() {
+        vmInstance.items.push({ id: Number($(this).val()), tag: $(this).text() });
+      });
+    },
+    components: {
+      "w-autocomplete": WAutocomplete.default,
+      "w-chip-list": WChipList.default
+    },
+    el: "#app"
+  });
+</script>
+
+
+
+
+<!-- <script>
+    var vm = new Vue({
+        delimiters: ['[%', '%]'],
+        components: {
+            'w-autocomplete': WAutocomplete.default
+        },
+        el: '#app',
+        data: {
+            myvar: "Vue is awesome!!",
+            myvar2: null,
+            enabled: false
+        },
+        methods: {
+            showHide() {
+                if (this.enabled) {
+                    jQuery('#tenant_attachment_attachment_type').show()
+
+                } else {
+
+                    jQuery('#tenant_attachment_attachment_type').hide()
+                }
+
+            },
+            itemSelected(item)
+            {
+                console.log(item)
+            }
+        },
+        watch: {
+            enabled() {
+                this.showHide()
+            },
+            myvar2() {
+                elem = jQuery('#tenant_attachment_attachment_type')
+                if  (elem.val() !== this.myvar2) {
+                    elem.val(this.myvar2)
+
+                }
+            }
+        },
+        mounted() {
+            this.$nextTick(function () {
+                // Code that will run only after the
+                // entire view has been rendered
+                this.showHide()
+            })
+        },
+
+    })
+</script>
+
+<script>
+    jQuery(document).ready(function () {
+        /*if(jQuery('#tenant_attachment_attachment-type').val()==='Attach from S3 object key')
+             jQuery('#taxpayer_spouse_name__row').show();
+        else jQuery('#taxpayer_spouse_name__row').hide();
+        jQuery('#taxpayer_married').change(function(){
+             if(jQuery('#taxpayer_married').prop('checked'))
+                 jQuery('#taxpayer_spouse_name__row').show();
+             else jQuery('#taxpayer_spouse_name__row').hide();});*/
+        jQuery('#tenant_attachment_attachment_type').change(
+            function () {
+                vm.myvar2 = jQuery('#tenant_attachment_attachment_type').val()
+            }
+        )
+    });
+</script> -->

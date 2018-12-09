@@ -1,0 +1,42 @@
+{{extend 'layout.html'}}
+{{block head}}
+<style>
+    .label {
+        display: inline-block;
+        max-width: 450px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+</style>
+{{end}}
+<div>
+    {{=form.custom.begin}}
+    {{=form.custom.submit}}
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{{=T('Column')}}</th>
+                <th scope="col">{{=T('File Column')}}</th>
+                <th scope="col">{{=T('File Preview')}}</th>
+                <th scope="col">{{=T('System Field')}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{for i,key in enumerate(data_rows[0].iterkeys()):}}
+            <tr>
+                <th scope="row">{{=i+1}}</th>
+                <th scope="row"><label>{{=colnum_string(i+1)}}</label></th>
+                <td>{{=key}}</td>
+                <td><label class="label" title="{{=data_rows[0][key]}}">
+                        <pre class="text-muted"><small>{{=data_rows[0][key]}}</small></pre></label></td>
+                <td>{{=form.custom.widget[key]}}</td>
+            </tr>
+            {{pass}}
+        </tbody>
+    </table>
+    {{=form.custom.submit}}
+    {{=form.custom.end}}
+</div>

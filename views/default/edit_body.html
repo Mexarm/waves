@@ -1,0 +1,58 @@
+{{extend 'layout.html'}}
+{{block head}}
+<script src="{{=URL('static','/ckeditor_4_10_1/ckeditor.js')}}"></script> 
+{{end}} 
+<div>
+
+  {{=form.custom.begin}}
+  {{=form.custom.widget.tenant}}
+  {{=T('description')}}<div>{{=form.custom.widget.description}}</div>
+  {{=T('channel type')}} <div>{{=form.custom.widget.channel_type}}</div>
+  {{=T('body')}} <div>{{=form.custom.widget.body}}</div>
+  
+  <div>
+    Cargar contenido desde archivo, <input type='file' accept='text/plain,text/html' onchange='openFile(event)'>
+  </div>
+  {{=form.custom.submit}}
+  {{=form.custom.end}}
+</div>
+
+<script>
+    CKEDITOR.replace('tenant_body_body', {
+      language: "es-mx",
+      fullPage: true,
+      height: 500,
+      /*extraPlugins: "uploadimage",
+      imageUploadUrl: "{ {=URL('storage_proxy',args=[campaign_tag])} }",
+      allowedContent: true,
+      placeholder_select: {
+        placeholders: { {=XML(fields)} },
+        format: '{ {=XML(format)} }'
+      },
+      removeButtons: 'CreatePlaceholder,About',*/ 
+      /*https://stackoverflow.com/questions/23538462/how-to-remove-buttons-from-ckeditor-4*/
+      /*on: { *//* captures click event on place holder elements and cancel it */
+        /*instanceReady: function (evt) {
+          evt.editor.on('doubleclick', function (evt) {
+            var element = evt.data.element;
+            if (element.hasClass('cke_placeholder')) {
+              evt.cancel();
+            }
+          }, null, null, -1);
+        }
+      }*/
+    });
+  </script>
+
+<script>
+var openFile = function (event) {
+    var input = event.target;
+    var reader = new FileReader();
+    reader.onload = function () {
+        var text = reader.result;
+        var node = document.getElementById('tenant_body_body');
+        node.innerText = text;
+    };
+    reader.readAsText(input.files[0]);
+};
+</script>

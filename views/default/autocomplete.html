@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-navigation-drawer app></v-navigation-drawer>
+            <v-toolbar app></v-toolbar>
+            <v-content>
+                <v-container fluid>
+                    <v-card>
+                        <v-card-title class="headline font-weight-regular blue-grey white--text">Profile</v-card-title>
+                        <v-card-text>
+                            <v-subheader class="pa-0">Where do you live?</v-subheader>
+                            <v-autocomplete v-model="model" :hint="!isEditing ? 'Click the icon to edit' : 'Click the icon to save'"
+                                :items="states" :readonly="!isEditing" :label="`State — ${isEditing ? 'Editable' : 'Readonly'}`"
+                                persistent-hint prepend-icon="mdi-city">
+                                <v-slide-x-reverse-transition slot="append-outer" mode="out-in">
+                                    <v-icon :color="isEditing ? 'success' : 'info'" :key="`icon-${isEditing}`" @click="isEditing = !isEditing"
+                                        v-text="isEditing ? 'mdi-check-outline' : 'mdi-circle-edit-outline'"></v-icon>
+                                </v-slide-x-reverse-transition>
+                            </v-autocomplete>
+                        </v-card-text>
+                    </v-card>
+                    <router-view></router-view>
+                </v-container>
+            </v-content>
+            <v-footer app></v-footer>
+        </v-app>
+
+
+
+    </div>
+
+    {{ if configuration.get('app.production'):}}
+    <script src="{{=URL('static','/js/vue.min.js')}}"></script>
+    {{else:}}
+    <script src="{{=URL('static','/js/vue.js')}}"></script>
+    {{pass}}
+    <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+    <script>
+        new Vue({ el: '#app' })
+    </script>
+</body>
+
+</html>
